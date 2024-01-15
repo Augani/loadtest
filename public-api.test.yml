@@ -1,0 +1,203 @@
+config:
+  target: https://app.uat.secondstax.com/api/v1
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      rampTo: 60
+      name: Warm up phase
+    - duration: 60
+      arrivalRate: 120
+      rampTo: 240
+      name: Ramp up load
+    - duration: 300
+      arrivalRate: 120
+      rampTo: 360
+      name: Spike phase
+  plugins:
+    ensure: {}
+    apdex: {}
+    metrics-by-endpoint: {}
+  apdex:
+    threshold: 100
+  ensure:
+    thresholds:
+      - http.response_time.p99: 100
+      - http.response_time.p95: 75
+
+scenarios:
+  - flow:
+      - loop:
+          - get:
+              url: "/accounts/activities"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/account/configurations/dtbp_checks"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/account/statuses"
+        count: 500
+
+  - flow:
+      - loop:
+          - post:
+              url: "/auth/login"
+              json:
+                username: "your_username"
+                password: "your_password"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/broker"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/calendar"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/client"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/clock"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/corporate/actions/announcements"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/ctd_schedule"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/exchange_rate"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/fund_account"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/group_account"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/lov"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/news"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/orders"
+        count: 500
+      - loop:
+          - delete:
+              url: "/orders"
+              params:
+                orderId: "your_order_id"
+        count: 200
+      - loop:
+          - post:
+              url: "/orders"
+              json:
+                symbol: "AAPL"
+                quantity: 10
+                price: 150.00
+        count: 300
+
+  - flow:
+      - loop:
+          - get:
+              url: "/portfolio/history"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/positions"
+        count: 500
+      - loop:
+          - delete:
+              url: "/positions"
+              params:
+                positionId: "your_position_id"
+        count: 200
+
+  - flow:
+      - loop:
+          - delete:
+              url: "/role/assigned/123"
+        count: 200
+      - loop:
+          - get:
+              url: "/role/assigned/123"
+        count: 300
+      - loop:
+          - post:
+              url: "/role/assigned/123"
+              json:
+                roleId: "your_role_id"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/roles"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/securities"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/transactions"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/users"
+        count: 500
+
+  - flow:
+      - loop:
+          - get:
+              url: "/watchlists"
+        count: 500
